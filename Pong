@@ -1,0 +1,157 @@
+import turtle
+from pynput.keyboard import Key, Controller
+
+keyboard = Controller
+
+wn = turtle.Screen()
+wn.title("Pong")
+wn.bgcolor("black")
+wn.setup(width=800, height=600)
+wn.tracer(0)
+
+# Score
+score_1 = 0
+score_2 = 0
+
+# Barre 1
+barre_1 = turtle.Turtle()
+barre_1.speed(0)
+barre_1.shape("square")
+barre_1.color("white")
+barre_1.shapesize(stretch_wid=5, stretch_len=1)
+barre_1.penup()
+barre_1.goto(-350, 0)
+
+# Barre 2
+barre_2 = turtle.Turtle()
+barre_2.speed(0)
+barre_2.shape("square")
+barre_2.color("white")
+barre_2.shapesize(stretch_wid=5, stretch_len=1)
+barre_2.penup()
+barre_2.goto(350, 0)
+
+# Balle
+balle = turtle.Turtle()
+balle.speed(0)
+balle.shape("square")
+balle.color("white")
+balle.penup()
+balle.goto(0, 0)
+balle.dx = 0.3
+balle.dy = 0.3
+
+# Terrain
+ligne = turtle.Turtle()
+ligne.color("white")
+ligne.sety(300)
+ligne.right(90)
+ligne.begin_fill()
+ligne.forward(600)
+
+# Pen
+pen = turtle.Turtle()
+pen.speed(0)
+pen.color("white")
+pen.penup()
+pen.hideturtle()
+pen.goto(0, 260)
+pen.write("Joueur 1: 0 Joueur 2: 0", align="center", font=("Courier", 24, "normal"))
+
+
+# Fonction
+
+def barre_1_haut():
+    y = barre_1.ycor()
+    y += 20
+    barre_1.sety(y)
+
+
+def barre_1_bas():
+    y = barre_1.ycor()
+    y -= 20
+    barre_1.sety(y)
+
+
+def barre_2_haut():
+    y = barre_2.ycor()
+    y += 20
+    barre_2.sety(y)
+
+
+def barre_2_bas():
+    y = barre_2.ycor()
+    y -= 20
+    barre_2.sety(y)
+
+
+# Touches clavier
+wn.listen()
+wn.onkeypress(barre_1_haut, "z")
+wn.onkeypress(barre_1_bas, "s")
+wn.onkeypress(barre_2_haut, "Up")
+wn.onkeypress(barre_2_bas, "Down")
+
+# Règles
+
+
+# main game loop
+while True:
+    wn.update()
+    # Intelligence Artificielle
+    '''
+    if balle.xcor() >=0:
+        if balle.ycor() > barre_2.ycor():
+            barre_2_haut()
+        if balle.ycor() < barre_2.ycor():
+            barre_2_bas()
+    if balle.xcor() <=0:
+        if balle.ycor() > barre_1.ycor():
+            barre_1_haut()
+        if balle.ycor() < barre_1.ycor():
+            barre_1_bas()
+    '''
+
+    if barre_1.ycor() >= 250:
+        barre_1.sety(250)
+    if barre_1.ycor() <= -250:
+        barre_1.sety(-250)
+    if barre_2.ycor() >= 250:
+        barre_2.sety(250)
+    if barre_2.ycor() <= -250:
+        barre_2.sety(-250)
+
+    # Bouger la balle
+    balle.setx(balle.xcor() + balle.dx)
+    balle.sety(balle.ycor() + balle.dy)
+
+    # Vérification Bordure
+    if balle.ycor() > 290:
+        balle.sety(290)
+        balle.dy *= -1
+    if balle.ycor() < -280:
+        balle.sety(-280)
+        balle.dy *= -1
+    if balle.xcor() > 390:
+        balle.goto(0, 0)
+        balle.dx *= -1
+        score_1 += 1
+        pen.clear()
+        pen.write("Joueur 1: {} Joueur 2: {}".format(score_1, score_2), align="center", font=("Courier", 24, "normal"))
+    if balle.xcor() < -390:
+        balle.goto(0, 0)
+        balle.dx *= -1
+        score_2 += 1
+        pen.clear()
+        pen.write("Joueur 1: {} Joueur 2: {}".format(score_1, score_2), align="center", font=("Courier", 24, "normal"))
+
+    # Collision balles et barres
+    if (balle.xcor() > 330 and balle.xcor() < 350) and (
+            balle.ycor() < barre_2.ycor() + 50 and balle.ycor() > barre_2.ycor() - 50):
+        balle.setx(330)
+        balle.dx *= -1
+
+    if (balle.xcor() < -330 and balle.xcor() > -350) and (
+            balle.ycor() < barre_1.ycor() + 50 and balle.ycor() > barre_1.ycor() - 50):
+        balle.setx(-330)
+        balle.dx *= -1
