@@ -1,0 +1,38 @@
+import turtle
+
+def sier(tur, order, size):
+    """ Draw Sierpinski triangle """
+    if order == 0:
+        for _ in range(3):
+            tur.forward(size)
+            tur.left(120)
+    else:
+        step = size / 2
+        for t1, m1, t2, m2 in [(0, step, 0, 0),
+                               (120, step, -120, 0),
+                               (-60, step, 60, -(step))]:
+            sier(tur, order - 1, step)
+            tur.left(t1)
+            tur.forward(m1)
+            tur.left(t2)
+            tur.forward(m2)
+
+
+if __name__ == '__main__':
+    odr = 6
+    sz = 600
+
+    root = turtle.Screen()
+    root.bgcolor("black")
+    root.setup(800, 600)
+
+    alex = turtle.Turtle()
+    alex.color('white')
+    alex.speed(0)
+    alex.penup()
+    alex.setpos(-320, -250)
+    alex.pendown()
+
+    sier(alex, odr, sz)
+
+    root.mainloop()
