@@ -1,0 +1,162 @@
+''' Si vous n'êtes pas adepte de la programmation, les lignes suivante ne vous diront probablement rien, c'est pour cela que j'ai penser à expliquer mon code, avec des "commentaires",
+c'est les phrases précédé d'un dièse, elle ne sont pas pris en compte par l'ordinateur qui lis le programme, cela permet de ne pas se perdre dans un code qui peut vite devenir
+chaotique, dépassant les milliers de lignes, ici il y a plusieurs catégories qui correspondent a des éléments particulier du jeu.
+'''
+
+
+import turtle # Permet d'utiliser le module "Turtle" qui n'est rien de plus qu'un module graphique, cela permet de tracer des traits, des formes, ect. Au coeur de notre programme dans notre cas.
+
+wn = turtle.Screen() # Attribue a la variable "wn" le rôle d'écran, lorsque l'on écrira "wn" plus tard, ça sera alors pour modifier l'écran. "wn" vient de l'anglais "Window" qui veut dire "Fenêtre".
+wn.title("Pong") # Le nom que portera notre programme, celui qui s'affichera lorsque on le lancera.
+wn.bgcolor("black") # La couleur de fond, ici ça sera du noir.
+wn.setup(width=800, height=600) # Les dimensions, très important de les retenir, 800 pixels de largeur et 600 de hauteur.
+wn.tracer(0) # Défini le temps de rafraichissement de notre fenêtre, 0 signifie le maximum, notre fenêtre de jeu s'actualisera le plus vite possible.
+
+# Score
+score_1 = 0 # Des variables pour le score
+score_2 = 0
+
+# La partie qui suis est purement visuelle, pour afficher les informations l'écran, sans ça le jeu tournera quand même, et l'ia pourra jouer quand même, mais nous nous ne verrons rien.
+
+# Barre 1
+barre_1 = turtle.Turtle() # Associe la variable "Barre_1" a un élément graphique du module Turtle
+barre_1.speed(0) # Ici ne n'est pas la vitesse de l'objet, mais encore une fois le taux de rafraichissement, comme a la ligne 13.
+barre_1.shape("square") # La forme de l'objet, un carré.
+barre_1.color("white") # La couleur de l'objet, blanc.
+barre_1.shapesize(stretch_wid=5, stretch_len=1) # Étire l'objet, maintenant notre carré est un réctangle de 1 de largeur et 5 de hauteur.
+barre_1.penup() # Pour ne pas qu'un trait soit tracé derrière la barre, c'est purement esthetique.
+barre_1.goto(-350, 0) # Défini la position de l'objet, rappelons nous que notre écran fait 800 de largeur, 400 a droite, 400 a gauche. La coordonnée est donc "Quasiment tout a gauche" pour l'horizontal
+					  # et au centre pour la vertical, notre objet a pour coordonnée "-350, 0".
+
+# Barre 2 #Exactement la même chose que pour la barre 1, la seule différence sera la positon, tout a droite cette fois, et le nom de la variable qui prend un 2.
+barre_2 = turtle.Turtle()
+barre_2.speed(0)
+barre_2.shape("square")
+barre_2.color("white")
+barre_2.shapesize(stretch_wid=5, stretch_len=1)
+barre_2.penup()
+barre_2.goto(350, 0)
+
+# Balle 
+balle = turtle.Turtle() 
+balle.speed(0)
+balle.shape("square")
+balle.color("white")
+balle.penup()
+balle.goto(0, 0) # La balle a pour position de débart (0, 0) qui est le centre.
+balle.dx = 0.3 # Ces deux variables sont très importantes, elle vont définir la vitesse de notre balle, mais pour le moment elle sont inutile. 
+balle.dy = 0.3 # 
+
+# Terrain # Cette partie c'est beaucoup de lignes pour pas grand chose, juste une ligne au au milieu pour délimiter les terrains.
+ligne = turtle.Turtle()
+ligne.color("white")
+ligne.sety(300)
+ligne.right(90)
+ligne.begin_fill()
+ligne.forward(600)
+
+# Pen # Cette partie c'est le score.
+pen = turtle.Turtle() 
+pen.speed(0)
+pen.color("white")
+pen.penup()
+pen.hideturtle()
+pen.goto(0, 260)
+pen.write("Joueur 1: 0 Joueur 2: 0", align="center", font=("Courier", 24, "normal"))
+
+
+
+# Fonction # Dans cette partie on défini les fonctions pour faire monter les barres en haut ou en bas
+
+def barre_1_haut():
+    y = barre_1.ycor() # La variable y correspond a la position y de la barre.
+    y += 20 # La variable y prend 20 de plus, si avant elle était a 200, elle passe a 220.
+    barre_1.sety(y) # Défini la position de la barre identique a la variable y, en gros la barre monte de 20 pixels.
+
+
+def barre_1_bas(): # La même chose pour aller en bas
+    y = barre_1.ycor()
+    y -= 20
+    barre_1.sety(y)
+
+
+def barre_2_haut(): # Pour la barre 2
+    y = barre_2.ycor()
+    y += 20
+    barre_2.sety(y)
+
+
+def barre_2_bas(): # Pareil.
+    y = barre_2.ycor()
+    y -= 20
+    barre_2.sety(y)
+
+
+# Touches clavier
+wn.listen() # Dis au programme de faire attention au frappes 
+wn.onkeypress(barre_1_haut, "z") # Quand on appuis sur z, la barre de gauche monte
+wn.onkeypress(barre_1_bas, "s") # Quand on appuis sur s, la barre de gauche descend
+wn.onkeypress(barre_2_haut, "Up") # Quand on appuis sur la flèche du haut, la barre de droite monte
+wn.onkeypress(barre_2_bas, "Down") # Quand on appuis sur la flèche du bas, la barre de droite descend
+
+# main game loop # C'est une boucle qui constituera le moteur du jeu, elle s'actualise en continue, cela permet de définir les règles de collision et de mouvement
+while True:
+    wn.update() # Actualise la fenêtre de jeu.
+    
+ 	#  IA # Si la balle est dans la partie droite du terrain, alors la barre de droite va regarder si la balle est au dessus ou en dessous, et appellera la fonction adapté en conséquence
+
+    if balle.xcor() >=0:
+        if balle.ycor() > barre_2.ycor():
+            barre_2_haut()
+        if balle.ycor() < barre_2.ycor():
+            barre_2_bas()
+    if balle.xcor() <=0:
+        if balle.ycor() > barre_1.ycor():
+            barre_1_haut()
+        if balle.ycor() < barre_1.ycor():
+            barre_1_bas()
+
+    # Empêche les barre d'aller au dessus ou en dessous de la zone de jeu.
+    if barre_1.ycor() >= 250:
+        barre_1.sety(250)
+    if barre_1.ycor() <= -250:
+        barre_1.sety(-250)
+    if barre_2.ycor() >= 250:
+        barre_2.sety(250)
+    if barre_2.ycor() <= -250:
+        barre_2.sety(-250)
+
+    # Bouger la balle # Ajoute au coordonnées de la balle les coordonnées des variables dx et dy, la balle se déplace alors.
+    balle.setx(balle.xcor() + balle.dx)
+    balle.sety(balle.ycor() + balle.dy)
+
+    # Vérification Bordure 
+    if balle.ycor() > 290: # Lorsque la balle touche une bordure, la variable dy est multiplié par -1, et donc la balle se déplace dans le sens inverse au niveau de l'axe des ordonnées
+        balle.sety(290)
+        balle.dy *= -1
+    if balle.ycor() < -280:
+        balle.sety(-280)
+        balle.dy *= -1
+    if balle.xcor() > 390: # Lorsque atteint la coordonnée 390 en x, ce qui est la bordure du terrain, le score du joueur 1 augmente de 1, la balle retourne au coordonnées initiales
+        balle.goto(0, 0)   # et sa direction en x est inversé
+        balle.dx *= -1
+        score_1 += 1
+        pen.clear()
+        pen.write("Joueur 1: {} Joueur 2: {}".format(score_1, score_2), align="center", font=("Courier", 24, "normal"))
+    if balle.xcor() < -390:
+        balle.goto(0, 0)
+        balle.dx *= -1
+        score_2 += 1
+        pen.clear()
+        pen.write("Joueur 1: {} Joueur 2: {}".format(score_1, score_2), align="center", font=("Courier", 24, "normal"))
+
+    # Collision balles et barres
+    if (balle.xcor() > 330 and balle.xcor() < 350) and (
+            balle.ycor() < barre_2.ycor() + 50 and balle.ycor() > barre_2.ycor() - 50): # En gros, si la balle touche la barre, sa direction en x est inversé, elle rebondit.
+        balle.setx(330)
+        balle.dx *= -1
+
+    if (balle.xcor() < -330 and balle.xcor() > -350) and (
+            balle.ycor() < barre_1.ycor() + 50 and balle.ycor() > barre_1.ycor() - 50): # Pareil.
+        balle.setx(-330)
+        balle.dx *= -1
