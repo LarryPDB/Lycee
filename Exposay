@@ -1,0 +1,10 @@
+Expérience: Créer une Intelligence Artificielle capable de jouer au jeu “Pong”
+
+Cette expérience consiste à coder une intelligence artificielle capable de jouer au jeu “Pong”, pour cela, il va falloir réfléchir à plusieurs manières d’y parvenir.
+Avant de créer l’IA, il faut déjà créer le jeu. Pour cela nous allons nous servir du langage de programmation “Python” dans sa version 3.6.4.
+
+Le code en entier se trouvera dans une annexe à la fin du TPE, afin de ne pas faire de pages inutiles.
+
+Le jeu fait environ 150 lignes de code, c’est très court pour un programme. L’IA elle en fait une vingtaine. Plusieurs concept mathématique se cachent derrière pas mal de ces fonctions, nous allons voir ça par la suite.
+
+
