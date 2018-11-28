@@ -1,0 +1,89 @@
+import turtle
+
+#Screen
+wn = turtle.Screen()
+wn.title("Tic Tac Toe")
+wn.bgcolor("black")
+wn.setup(width=800,height=800)
+wn.tracer(0)
+
+# Terrain
+
+pen = turtle.Turtle()
+pen.color("White")
+pen.speed(1)
+pen.hideturtle()
+pen.penup()
+pen.goto(-350, -350)
+pen.pendown()
+pen.goto(-350, 350)
+pen.goto(350, 350)
+pen.goto(350, -350)
+pen.goto(-350, -350)
+pen.goto(-116.6, -350)
+pen.goto(-116.6, 350)
+pen.goto(116.6, 350)
+pen.goto(116.6, -350)
+pen.penup()
+pen.goto(350, -116.6)
+pen.pendown()
+pen.goto(-350, -116.6)
+pen.goto(-350, 116.6)
+pen.goto(350, 116.6)
+
+dcroix = turtle.Turtle()
+dcroix.speed(0)
+dcroix.color("White")
+dcroix.penup()
+
+dcercle = turtle.Turtle()
+dcercle.speed(0)
+dcercle.color("White")
+dcercle.penup()
+
+x = 0
+y = 0
+
+#Fonctions
+def croix(x, y):
+    dcroix.goto(x, y)
+    dcroix.pendown()
+    dcroix.goto(x+116,y-116)
+    dcroix.goto(x-(116),y+(116))
+    dcroix.penup()
+    dcroix.goto(x+116,y+116)
+    dcroix.pendown()
+    dcroix.goto(x-(116),y-(116))
+
+def cercle(x, y):
+    dcercle.goto(x, y-116)
+    dcercle.pendown()
+    dcercle.circle(116)
+
+def haut(y):
+    y += 116
+def bas(y):
+    y -= 116
+def droite(x):
+    x += 116
+def gauche(x):
+    x -= 116
+
+wn.listen()
+wn.onkeypress(haut(y), "z")
+wn.onkeypress(bas(y), "s")
+wn.onkeypress(droite(x), "d")
+wn.onkeypress(gauche(x), "q")
+wn.onkeypress(croix(x, y), "c")
+wn.onkeypress(cercle(x, y), "x")
+
+
+# Main loop
+while True:
+    wn.update()
+
+
+
+
+# Bric a brac:
+# Mesures: http://www.noelshack.com/2018-48-3-1543405548-tic-tac-toe-mesure.png
