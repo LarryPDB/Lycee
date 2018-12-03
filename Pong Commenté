@@ -6,6 +6,7 @@ chaotique, d�passant les milliers de lignes, ici il y a plusieurs cat�gories
 
 import turtle # Permet d'utiliser le module "Turtle" qui n'est rien de plus qu'un module graphique, cela permet de tracer des traits, des formes, ect. Au coeur de notre programme dans notre cas.
 import random
+import winsound
 
 wn = turtle.Screen() # Attribue a la variable "wn" le r�le d'�cran, lorsque l'on �crira "wn" plus tard, �a sera alors pour modifier l'�cran. "wn" vient de l'anglais "Window" qui veut dire "Fen�tre".
 wn.title("Pong") # Le nom que portera notre programme, celui qui s'affichera lorsque on le lancera.
@@ -111,7 +112,7 @@ while True:
     if time_2 >= 10:
         if balle.xcor() >=0:
             if balle.ycor() > barre_2.ycor():
-                if fail <= 20:
+                if fail <= 30:
                     barre_2_bas()
                     time_2 = 0
                     time_3 = 1000
@@ -119,7 +120,7 @@ while True:
                     barre_2_haut()
                     time_2 = 0
             if balle.ycor() < barre_2.ycor():
-                if fail <= 20:
+                if fail <= 30:
                     barre_2_haut()
                     time_2 = 0
                     time_3 = 1000
@@ -129,7 +130,7 @@ while True:
     if time_1 >= 10:
         if balle.xcor() <=0:
             if balle.ycor() > barre_1.ycor():
-                if fail <= 20:
+                if fail <= 30:
                     barre_1_bas()
                     time_1 = 0
                     time_3 = 1000
@@ -137,7 +138,7 @@ while True:
                     barre_1_haut()
                     time_1 = 0
             if balle.ycor() < barre_1.ycor():
-                if fail <= 20:
+                if fail <= 30:
                     barre_1_haut()
                     time_1 = 0
                     time_3 = 1000
@@ -162,9 +163,11 @@ while True:
     if balle.ycor() > 290: # Lorsque la balle touche une bordure, la variable dy est multipli� par -1, et donc la balle se d�place dans le sens inverse au niveau de l'axe des ordonn�es
         balle.sety(290)
         balle.dy *= -1
+        winsound.PlaySound("bounce.wav,".SND_ASYNC)
     if balle.ycor() < -280:
         balle.sety(-280)
         balle.dy *= -1
+        winsound.PlaySound("bounce.wav,".SND_ASYNC)
     if balle.xcor() > 390: # Lorsque atteint la coordonn�e 390 en x, ce qui est la bordure du terrain, le score du joueur 1 augmente de 1, la balle retourne au coordonn�es initiales
         balle.goto(0, 0)   # et sa direction en x est invers�
         balle.dx *= -1
@@ -183,11 +186,13 @@ while True:
             balle.ycor() < barre_2.ycor() + 50 and balle.ycor() > barre_2.ycor() - 50): # En gros, si la balle touche la barre, sa direction en x est invers�, elle rebondit.
         balle.setx(330)
         balle.dx *= -1
+        winsound.PlaySound("bounce.wav,".SND_ASYNC)
 
     if (balle.xcor() < -330 and balle.xcor() > -350) and (
             balle.ycor() < barre_1.ycor() + 50 and balle.ycor() > barre_1.ycor() - 50): # Pareil.
         balle.setx(-330)
         balle.dx *= -1
+        winsound.PlaySound("bounce.wav,".SND_ASYNC)
 
     time_1 += 1
     time_2 += 1
@@ -253,6 +258,45 @@ while True:
             if balle.ycor() < barre_1.ycor():
                 barre_1_bas()
                 time_1 = 1
+"""
+# IA 5
+"""
+    if time_2 >= 10:
+        if balle.xcor() >=0:
+            if balle.ycor() > barre_2.ycor():
+                if fail <= 30:
+                    barre_2_bas()
+                    time_2 = 0
+                    time_3 = 1000
+                else:
+                    barre_2_haut()
+                    time_2 = 0
+            if balle.ycor() < barre_2.ycor():
+                if fail <= 30:
+                    barre_2_haut()
+                    time_2 = 0
+                    time_3 = 1000
+                else:
+                    barre_2_bas()
+                    time_2 = 0
+    if time_1 >= 10:
+        if balle.xcor() <=0:
+            if balle.ycor() > barre_1.ycor():
+                if fail <= 30:
+                    barre_1_bas()
+                    time_1 = 0
+                    time_3 = 1000
+                else:
+                    barre_1_haut()
+                    time_1 = 0
+            if balle.ycor() < barre_1.ycor():
+                if fail <= 30:
+                    barre_1_haut()
+                    time_1 = 0
+                    time_3 = 1000
+                else:
+                    barre_1_bas()
+                    time_1 = 0
 """
 
 # CHOSES A FAIRE:
