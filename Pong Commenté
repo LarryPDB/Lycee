@@ -3,6 +3,15 @@ c'est les phrases précédée d'un dièse, elle ne sont pas pris en compte par l
 chaotique, dépassant les milliers de lignes, ici il y a plusieurs catégories qui correspondent à des éléments particulier du jeu.
 '''
 
+#Paramètres:
+
+fond = "black"
+couleur_barres="white"
+couleur_balle="white"
+vitesse_balle = 5
+pourcentage_faux_mouvement = 0
+vitesse_barres = 4
+
 
 import turtle # Permet d'utiliser le module "Turtle" qui n'est rien de plus qu'un module graphique, cela permet de tracer des traits, des formes, ect. Au coeur de notre programme dans notre cas.
 import random
@@ -10,7 +19,7 @@ import winsound
 
 wn = turtle.Screen() # Attribue a la variable "wn" le rôle d'écran, lorsque l'on écrira "wn" plus tard, ça sera alors pour modifier l'écran. "wn" vient de l'anglais "Window" qui veut dire "Fenêtre".
 wn.title("Pong") # Le nom que portera notre programme, celui qui s'affichera lorsque on le lancera.
-wn.bgcolor("black") # La couleur de fond, ici ça sera du noir.
+wn.bgcolor(fond) # La couleur de fond, ici ça sera du noir.
 wn.setup(width=800, height=600) # Les dimensions, c'est très important de les retenir, 800 pixels de largeur et 600 de hauteur.
 wn.tracer(0) # Défini le temps de rafraichissement de notre fenêtre, 0 signifie le maximum, notre fenêtre de jeu s'actualisera le plus vite possible.
 
@@ -18,13 +27,14 @@ wn.tracer(0) # Défini le temps de rafraichissement de notre fenêtre, 0 signifi
 score_1 = 0 # Des variables pour le score
 score_2 = 0
 
+
 # La partie qui suis est purement visuelle, pour afficher les informations l'écran, sans ça le jeu tournera quand même, et l'ia pourra jouer quand même, mais nous nous ne verrons rien.
 
 # Barre 1
 barre_1 = turtle.Turtle() # Associe la variable "Barre_1" a un élément graphique du module Turtle
 barre_1.speed(0) # Ici ne n'est pas la vitesse de l'objet, mais encore une fois le taux de rafraichissement, comme a la ligne 13.
 barre_1.shape("square") # La forme de l'objet, un carré.
-barre_1.color("white") # La couleur de l'objet, blanc.
+barre_1.color(couleur_barres) # La couleur de l'objet, blanc.
 barre_1.shapesize(stretch_wid=5, stretch_len=1) # étire l'objet, maintenant notre carré est un rectangle de 1 de largeur et 5 de hauteur.
 barre_1.penup() # Pour ne pas qu'un trait soit tracé derrière la barre, sinon le jeu deviendra rapidement très très lent.
 barre_1.goto(-350, 0) # Défini la position de l'objet, rappelons nous que notre écran fait 800 de largeur, 400 a droite, 400 a gauche. La coordonnée est donc "Quasiment tout a gauche" pour l'horizontal
@@ -34,7 +44,7 @@ barre_1.goto(-350, 0) # Défini la position de l'objet, rappelons nous que notre
 barre_2 = turtle.Turtle()
 barre_2.speed(0)
 barre_2.shape("square")
-barre_2.color("white")
+barre_2.color(couleur_barres)
 barre_2.shapesize(stretch_wid=5, stretch_len=1)
 barre_2.penup()
 barre_2.goto(350, 0)
@@ -42,12 +52,12 @@ barre_2.goto(350, 0)
 # Balle
 balle = turtle.Turtle()
 balle.speed(0)
-balle.shape("square")
-balle.color("white")
+balle.shape("circle")
+balle.color(couleur_balle)
 balle.penup()
 balle.goto(0, 0) # La balle a pour position de départ (0, 0) qui est le centre.
-balle.dx = 2.4 # Ces deux variables sont très importantes, elle vont définir la vitesse de notre balle, mais pour le moment elle sont inutile.
-balle.dy = 2.4 #
+balle.dx = vitesse_balle # Ces deux variables sont très importantes, elle vont définir la vitesse de notre balle, mais pour le moment elle sont inutile.
+balle.dy = vitesse_balle #
 
 # Terrain # Cette partie c'est beaucoup de lignes pour pas grand chose, juste une ligne au au milieu pour délimiter les terrains.
 ligne = turtle.Turtle()
@@ -109,10 +119,10 @@ while True:
     wn.update() # Actualise la fenêtre de jeu.
 
     #  IA # Si la balle est dans la partie droite du terrain, alors la barre de droite va regarder si la balle est au dessus ou en dessous, et appellera la fonction adaptée en conséquence
-    if time_2 >= 10:
+    if time_2 >= vitesse_barres:
         if balle.xcor() >=0:
             if balle.ycor() > barre_2.ycor():
-                if fail <= 30:
+                if fail <= pourcentage_faux_mouvement:
                     barre_2_bas()
                     time_2 = 0
                     time_3 = 1000
@@ -120,17 +130,17 @@ while True:
                     barre_2_haut()
                     time_2 = 0
             if balle.ycor() < barre_2.ycor():
-                if fail <= 30:
+                if fail <= pourcentage_faux_mouvement:
                     barre_2_haut()
                     time_2 = 0
                     time_3 = 1000
                 else:
                     barre_2_bas()
                     time_2 = 0
-    if time_1 >= 10:
+    if time_1 >= vitesse_barres:
         if balle.xcor() <=0:
             if balle.ycor() > barre_1.ycor():
-                if fail <= 30:
+                if fail <= pourcentage_faux_mouvement:
                     barre_1_bas()
                     time_1 = 0
                     time_3 = 1000
@@ -138,7 +148,7 @@ while True:
                     barre_1_haut()
                     time_1 = 0
             if balle.ycor() < barre_1.ycor():
-                if fail <= 30:
+                if fail <= pourcentage_faux_mouvement:
                     barre_1_haut()
                     time_1 = 0
                     time_3 = 1000
@@ -163,11 +173,9 @@ while True:
     if balle.ycor() > 290: # Lorsque la balle touche une bordure, la variable dy est multiplié par -1, et donc la balle se déplace dans le sens inverse au niveau de l'axe des ordonnées
         balle.sety(290)
         balle.dy *= -1
-        winsound.PlaySound("bounce.wav,".SND_ASYNC)
     if balle.ycor() < -280:
         balle.sety(-280)
         balle.dy *= -1
-        winsound.PlaySound("bounce.wav,".SND_ASYNC)
     if balle.xcor() > 390: # Lorsque atteint la coordonnée 390 en x, ce qui est la bordure du terrain, le score du joueur 1 augmente de 1, la balle retourne au coordonnées initiales
         balle.goto(0, 0)   # et sa direction en x est inversé
         balle.dx *= -1
@@ -186,13 +194,11 @@ while True:
             balle.ycor() < barre_2.ycor() + 50 and balle.ycor() > barre_2.ycor() - 50): # En gros, si la balle touche la barre, sa direction en x est inversé, elle rebondit.
         balle.setx(330)
         balle.dx *= -1
-        winsound.PlaySound("bounce.wav,".SND_ASYNC)
 
     if (balle.xcor() < -330 and balle.xcor() > -350) and (
             balle.ycor() < barre_1.ycor() + 50 and balle.ycor() > barre_1.ycor() - 50): # Pareil.
         balle.setx(-330)
         balle.dx *= -1
-        winsound.PlaySound("bounce.wav,".SND_ASYNC)
 
     time_1 += 1
     time_2 += 1
@@ -301,6 +307,6 @@ while True:
 
 # CHOSES A FAIRE:
 
-# Incorporer un pourcentage de chance ou l'ia fait un faux mouvement.
+# Incorporer un pourcentage de chance ou l'ia fait un faux mouvement. - Fait -
 
 #(Optionel) Rajouter des bruitages
